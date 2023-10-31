@@ -1,4 +1,4 @@
-name: Deploy to Dev
+name: Deploy_Kibana
 
 on:
   push:
@@ -6,10 +6,10 @@ on:
 
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
-  RUN_REGION: us-central1
-  #PORT: 8080
+  RUN_REGION: us-west1-c
   COMMIT_SHA: ${{ github.sha }}
-  # SPRING_PROFILES_ACTIVE: server-dev
+  #PORT: 8080
+  #GATEWAY_URL: https://cs-nlp-gateway-${{secrets.GCP_DEV_PROJECT_UID}}.a.run.app
 
 jobs:
 
@@ -18,16 +18,15 @@ jobs:
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
         env:
-          IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+          IMAGE_NAME: gcr.io/${{ secrets.GCP_FDI_PROJECT_ID }}/${{ secrets.GCP_APP_FDI_NAME }}
         steps:
 
         - name: Login
-          # uses: google-github-actions/setup-gcloud@master
-          uses: 'google-github-actions/setup-gcloud@v0'
+          uses: google-github-actions/setup-gcloud@master
           with:
-            GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-            service_account_email: ${{ secrets.GCP_DEV_EMAIL }}
-            service_account_key: ${{ secrets.GCP_DEV_CREDENTIALS }}
+            GCP_PROJECT_ID: ${{ secrets.GCP_FDI_PROJECT_ID }}
+            service_account_email: ${{ secrets.GCP_FDI_EMAIL }}
+            service_account_key: ${{ secrets.GCP_FDI_CREDENTIALS }}
 
         - name: Configure Docker
           run: gcloud auth configure-docker --quiet
@@ -36,11 +35,10 @@ jobs:
           uses: actions/checkout@v2
 
         - name: Build Docker image
-          run: docker build -t $IMAGE_NAME .
+          run: docker build . -t $IMAGE_NAME
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
 
-        - name: Deploy Docker image 
-          #run: gcloud run deploy $SERVICE_NAME --port=80 --project ${{ secrets.GCP_DEV_PROJECT_ID }} --memory 2G --min-instances 1 --max-instances 3 --add-cloudsql-instances=${{ secrets.DEV_DB_NAME }} --set-env-vars DATABASE_URL=${{ secrets.DEV_DATABASE_URL }} --set-env-vars ENVX="dev" --set-env-vars SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE --image $IMAGE_NAME --region us-central1 --allow-unauthenticated --platform managed --set-env-vars FIREBASE_TYPE=${{ secrets.DEV_FIREBASE_TYPE }} --set-env-vars FIREBASE_PID=${{ secrets.DEV_FIREBASE_PID }} --set-env-vars FIREBASE_PKID=${{ secrets.DEV_FIREBASE_PKID }} --set-env-vars FIREBASE_PK=${{ secrets.DEV_FIREBASE_PK }} --set-env-vars FIREBASE_CLIENTEMAIL=${{ secrets.DEV_FIREBASE_CLIENTEMAIL }} --set-env-vars FIREBASE_CLIENTID=${{ secrets.DEV_FIREBASE_CLIENTID }} --set-env-vars FIREBASE_AUTHURI=${{ secrets.DEV_FIREBASE_AUTHURI }} --set-env-vars FIREBASE_TOKENURI=${{ secrets.DEV_FIREBASE_TOKENURI }} --set-env-vars FIREBASE_AUTHCERTURL=${{ secrets.DEV_FIREBASE_AUTHCERTURL }} --set-env-vars FIREBASE_CLIENTCERTURL=${{ secrets.DEV_FIREBASE_CLIENTCERTURL }} 
-          run: gcloud run deploy $SERVICE_NAME --project ${{ secrets.GCP_PROJECT_ID }} --memory 4G --min-instances 1 --max-instances 5  --cpu-boost  --image $IMAGE_NAME --region us-central1 --allow-unauthenticated --platform managed
+        - name: Deploy Docker image
+          run: gcloud run deploy $SERVICE_NAME --project ${{ secrets.GCP_FDI_PROJECT_ID }} --port 80 --memory 2G --min-instances 1 --image $IMAGE_NAME --region us-west1 --allow-unauthenticated --platform managed
