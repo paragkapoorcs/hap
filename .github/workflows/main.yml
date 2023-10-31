@@ -7,7 +7,7 @@ on:
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
   RUN_REGION: us-central1
-  PORT: 80
+  PORT: 8080
   COMMIT_SHA: ${{ github.sha }}
   # SPRING_PROFILES_ACTIVE: server-dev
 
