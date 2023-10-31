@@ -6,7 +6,7 @@ on:
 
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
-  RUN_REGION: us-west1-c
+  RUN_REGION: europe-west1-b
   COMMIT_SHA: ${{ github.sha }}
   PORT: 8080
   #GATEWAY_URL: https://cs-nlp-gateway-${{secrets.GCP_DEV_PROJECT_UID}}.a.run.app
