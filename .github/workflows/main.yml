@@ -18,14 +18,14 @@ jobs:
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
         env:
-          IMAGE_NAME: gcr.io/${{ secrets.GCP_FDI_PROJECT_ID }}/${{ secrets.GCP_APP_FDI_NAME }}
+          IMAGE_NAME: gcr.io/${{ secrets.GCP_FDI_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
         steps:
 
         - name: Login
           uses: 'google-github-actions/setup-gcloud@v0'
           with:
-            GCP_PROJECT_ID: ${{ secrets.GCP_FDI_PROJECT_ID }}
-            service_account_email: ${{ secrets.GCP_FDI_EMAIL }}
+            GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+            service_account_email: ${{ secrets.GCP_DEV_EMAIL }}
             service_account_key: ${{ secrets.GCP_FDI_CREDENTIALS }}
 
         - name: Configure Docker
