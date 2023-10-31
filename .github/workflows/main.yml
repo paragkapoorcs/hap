@@ -22,7 +22,7 @@ jobs:
         steps:
 
         - name: Login
-          uses: google-github-actions/setup-gcloud@master
+          uses: 'google-github-actions/setup-gcloud@v0'
           with:
             GCP_PROJECT_ID: ${{ secrets.GCP_FDI_PROJECT_ID }}
             service_account_email: ${{ secrets.GCP_FDI_EMAIL }}
@@ -41,4 +41,4 @@ jobs:
           run: docker push $IMAGE_NAME
 
         - name: Deploy Docker image
-          run: gcloud run deploy $SERVICE_NAME --project ${{ secrets.GCP_FDI_PROJECT_ID }} --port 80 --memory 2G --min-instances 1 --image $IMAGE_NAME --region us-west1 --allow-unauthenticated --platform managed
+          run: gcloud run deploy $SERVICE_NAME --project ${{ secrets.GCP_FDI_PROJECT_ID }} --memory 2G --min-instances 1 --image $IMAGE_NAME --region us-west1 --allow-unauthenticated --platform managed
