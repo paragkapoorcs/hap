@@ -41,4 +41,4 @@ jobs:
           run: docker push $IMAGE_NAME
 
         - name: Deploy Docker image
-          run: gcloud run deploy $SERVICE_NAME --project ${{ secrets.GCP_FDI_PROJECT_ID }} --memory 2G --min-instances 1 --image $IMAGE_NAME --region us-west1 --allow-unauthenticated --platform managed
+          run: gcloud run deploy $SERVICE_NAME --project ${{ secrets.GCP_PROJECT_ID }} --memory 2G --min-instances 1 --image $IMAGE_NAME --region us-west1 --allow-unauthenticated --platform managed
