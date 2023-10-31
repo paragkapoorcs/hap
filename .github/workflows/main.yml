@@ -2,7 +2,7 @@ name: Deploy_Kibana
 
 on:
   push:
-    branches: [ port80 ]
+    branches: [ master ]
 
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
